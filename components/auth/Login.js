@@ -1,27 +1,23 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Button, TextInput } from "react-native";
 import firebase, { auth } from "../../firebase/config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-export default function Register() {
-  const [info, setInfo] = useState({ email: "", password: "", name: "" });
+export default function Login() {
+  const [info, setInfo] = useState({ email: "", password: "" });
   // console.log(info);
-  const onSignUp = () => {
-    const { email, password, name } = info;
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log("userCredential");
+  const onLogin = () => {
+    const { email, password } = info;
+    signInWithEmailAndPassword(auth, email, password)
+      .then((res) => {
+        console.log("successsssssssssss");
       })
       .catch((error) => {
-        console.log("errorrrrrrrrrr: ", error);
+        console.log("ERROR LOGINNNNNNNNN: ", error);
       });
   };
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder="name"
-        onChangeText={(name) => setInfo({ ...info, name })}
-      />
       <TextInput
         placeholder="email"
         onChangeText={(email) => setInfo({ ...info, email })}
@@ -31,7 +27,7 @@ export default function Register() {
         secureTextEntry={true}
         onChangeText={(password) => setInfo({ ...info, password })}
       />
-      <Button onPress={onSignUp} title="Sign Up" />
+      <Button onPress={onLogin} title="Log in" />
     </View>
   );
 }
