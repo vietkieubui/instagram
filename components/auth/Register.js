@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Button, TextInput } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { addDocument } from "../../firebase/services";
+import { addDocument, setDocument } from "../../firebase/services";
 import { auth } from "../../firebase/config";
 
 export default function Register() {
@@ -10,29 +10,21 @@ export default function Register() {
   const onSignUp = async () => {
     const { email, password, name } = info;
     createUserWithEmailAndPassword(auth, email, password).then((result) => {
-      addDocument("users", { name, email });
+      setDocument("users", { name, email }, auth.currentUser.uid);
     });
-  };
-
-  const testHandle = () => {
-    const { email, password, name } = info;
-    addDocument("users", { name, email });
   };
 
   return (
     <View style={styles.container}>
-      <Button title="testtt" onPress={testHandle} />
       <TextInput
         placeholder="name"
         onChangeText={(name) => {
-          console.log(info);
           setInfo({ ...info, name });
         }}
       />
       <TextInput
         placeholder="email"
         onChangeText={(email) => {
-          console.log(info);
           setInfo({ ...info, email });
         }}
       />
@@ -40,7 +32,6 @@ export default function Register() {
         placeholder="password"
         secureTextEntry={true}
         onChangeText={(password) => {
-          console.log(info);
           setInfo({ ...info, password });
         }}
       />

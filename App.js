@@ -9,6 +9,12 @@ import RegisterScreen from "./components/auth/Register";
 import LoginScreen from "./components/auth/Login";
 import { auth } from "./firebase/config";
 
+//REDUX
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import rootReducer from "./reudx/reducers";
+import from 'redux-thunk'
+
 const Stack = createStackNavigator();
 
 export default function App() {
