@@ -1,27 +1,27 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Button, TextInput } from "react-native";
-import { auth } from "../../firebase/config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { addDocument, addDocumentWithoutAwait } from "../../firebase/services";
+import { addDocument } from "../../firebase/services";
+import { auth } from "../../firebase/config";
 
 export default function Register() {
   const [info, setInfo] = useState({ email: "", password: "", name: "" });
-  const onSignUp = () => {
+
+  const onSignUp = async () => {
     const { email, password, name } = info;
-    console.log("first inforrrrr:", info);
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("objecttttttttttttttttttttttt", user);
-        addDocument("users", { email, name });
-      })
-      .catch((error) => {
-        console.log("errorrrrrrrrrr: ", error);
-      });
-    console.log("lats inforfffffffffffff:", info);
+    createUserWithEmailAndPassword(auth, email, password).then((result) => {
+      addDocument("users", { name, email });
+    });
   };
+
+  const testHandle = () => {
+    const { email, password, name } = info;
+    addDocument("users", { name, email });
+  };
+
   return (
     <View style={styles.container}>
+      <Button title="testtt" onPress={testHandle} />
       <TextInput
         placeholder="name"
         onChangeText={(name) => {

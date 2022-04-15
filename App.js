@@ -21,7 +21,7 @@ export default function App() {
         setLogState({ loggedIn: true, loaded: true });
       }
     });
-  }, [logState]);
+  }, []);
 
   if (!logState.loaded) {
     return (
