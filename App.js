@@ -4,16 +4,20 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+//Screen
 import LandingScreen from "./components/auth/Landing";
 import RegisterScreen from "./components/auth/Register";
 import LoginScreen from "./components/auth/Login";
+import MainScreen from "./components/Main";
 import { auth } from "./firebase/config";
 
 //REDUX
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import rootReducer from "./reudx/reducers";
-import from 'redux-thunk'
+import thunk from "redux-thunk";
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const Stack = createStackNavigator();
 
@@ -52,9 +56,9 @@ export default function App() {
     );
   }
   return (
-    <View style={styles.container}>
-      <Text>User Is Logged In</Text>
-    </View>
+    <Provider store={store}>
+      <MainScreen />
+    </Provider>
   );
 }
 
