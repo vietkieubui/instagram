@@ -8,7 +8,7 @@ export function fetchUser() {
     const docSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
     // console.log(docSnap.data());
     if (docSnap.exists()) {
-      console.log(docSnap.data());
+      // console.log(docSnap.data());
       dispatch({ type: USER_STATE_CHANGE, currentUser: docSnap.data() });
     } else {
       console.log("does not exist");
