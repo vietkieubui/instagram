@@ -16,18 +16,10 @@ const EpmtyScreen = () => {
 
 function Main(props) {
   useEffect(() => {
-    // console.log(props);
     props.fetchUser();
   }, []);
   const { currentUser } = props;
   console.log(props);
-  // if (currentUser == undefined) {
-  //   return (
-  //     <View style={styles.container}>
-  //       <Text>LOADING USERRRRRRRR</Text>
-  //     </View>
-  //   );
-  // }
   return (
     <Tab.Navigator initialRouteName="Feed" labeled={false}>
       <Tab.Screen
@@ -82,6 +74,7 @@ const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
+// export default Main;
 
 const styles = StyleSheet.create({
   container: {

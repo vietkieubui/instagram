@@ -10,6 +10,7 @@ import RegisterScreen from "./components/auth/Register";
 import LoginScreen from "./components/auth/Login";
 import MainScreen from "./components/Main";
 import AddScreen from "./components/main/Add";
+import SaveScreen from "./components/main/Save";
 
 import { auth } from "./firebase/config";
 
@@ -23,7 +24,7 @@ const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const Stack = createStackNavigator();
 
-export default function App() {
+export default function App(props) {
   const [logState, setLogState] = useState({ loaded: false, loggedIn: false });
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -66,7 +67,12 @@ export default function App() {
             component={MainScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="Add" component={AddScreen} />
+          <Stack.Screen
+            name="Add"
+            component={AddScreen}
+            navigation={props.navigation}
+          />
+          <Stack.Screen name="Save" component={SaveScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
