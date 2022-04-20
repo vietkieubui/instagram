@@ -17,7 +17,7 @@ export const useFirestore = (collections, condition) => {
     collectionRef = query(collectionRef, orderBy("createdAt"));
     /**condition
      * {
-     *  fieldName: 'abc',
+     *  fieldName: 'posts',
      *  operator: '==',
      *  compareValue: 'abc'
      * }

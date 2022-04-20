@@ -17,7 +17,6 @@ export default function Save(props) {
     const childPath = `posts/${auth.currentUser.uid}/${Math.random().toString(
       36
     )}`;
-    console.log(childPath);
     const uri = props.route.params.image;
     const response = await fetch(uri);
     const blob = await response.blob();
@@ -55,7 +54,6 @@ export default function Save(props) {
   };
 
   const savePostData = (downloadURL) => {
-    console.log({ downloadURL, caption });
     addPost({ downloadURL, caption });
     props.navigation.popToTop();
   };

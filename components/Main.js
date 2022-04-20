@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 
-import { fetchUser } from "../reudx/actions";
+import { fetchUser, fetchUserPosts } from "../reudx/actions";
 import FeedScreen from "./main/Feed";
 import ProfileScreen from "./main/Profile";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -16,10 +16,11 @@ const EpmtyScreen = () => {
 
 function Main(props) {
   useEffect(() => {
+    console.log(props);
     props.fetchUser();
+    props.fetchUserPosts();
+    console.log(props);
   }, []);
-  const { currentUser } = props;
-  console.log(props);
   return (
     <Tab.Navigator initialRouteName="Feed" labeled={false}>
       <Tab.Screen
@@ -68,13 +69,13 @@ function Main(props) {
 }
 
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ fetchUser }, dispatch);
+  bindActionCreators({ fetchUser, fetchUserPosts }, dispatch);
 
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
+  posts: store.userState.posts,
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
-// export default Main;
 
 const styles = StyleSheet.create({
   container: {
