@@ -61,6 +61,7 @@ function Profile(props) {
   if (user === null) {
     return <View></View>;
   }
+  console.log(userPosts);
   return (
     <View style={styles.container}>
       <View style={styles.containerInfo}>
