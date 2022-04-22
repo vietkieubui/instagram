@@ -1,6 +1,14 @@
 import { async } from "@firebase/util";
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, Button, FlatList, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Button,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+} from "react-native";
 import {
   getDoc,
   doc,
@@ -10,18 +18,24 @@ import {
   collection,
 } from "firebase/firestore";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import {
+  fetchUser,
+  fetchUserPosts,
+  fetchUserFollowing,
+  reload,
+} from "../../reudx/actions";
 import { auth, db } from "../../firebase/config";
-import { addFollowing, deleteFollowing } from "../../firebase/services";
+import { addFollowing, deleteFollowing, logOut } from "../../firebase/services";
 
 function Profile(props) {
   // console.log(props);
   const [userPosts, setUserPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [following, setFollowing] = useState(false);
-
+  const [refreshing, setRefreshing] = useState(false);
   useEffect(async () => {
     const { currentUser, posts } = props;
-    console.log(props);
     if (props.route.params.uid === auth.currentUser.uid) {
       setUser(currentUser);
       setUserPosts(posts);
@@ -58,10 +72,13 @@ function Profile(props) {
   const onUnfollow = () => {
     deleteFollowing(props.route.params.uid);
   };
+
+  const onLogout = () => {
+    logOut();
+  };
   if (user === null) {
     return <View></View>;
   }
-  console.log(userPosts);
   return (
     <View style={styles.container}>
       <View style={styles.containerInfo}>
@@ -75,10 +92,21 @@ function Profile(props) {
               <Button title="Follow" onPress={onFollow} />
             )}
           </View>
-        ) : null}
+        ) : (
+          <Button title="Log out" onPress={onLogout} />
+        )}
       </View>
       <View style={styles.containerGallery}>
         <FlatList
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                setRefreshing(true);
+                props.reload();
+              }}
+            />
+          }
           numColumns={3}
           horizontal={false}
           data={userPosts}
@@ -119,4 +147,9 @@ const mapStateToProps = (store) => ({
   following: store.userState.following,
 });
 
-export default connect(mapStateToProps, null)(Profile);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    { fetchUser, fetchUserPosts, fetchUserFollowing, reload },
+    dispatch
+  );
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

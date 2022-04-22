@@ -13,6 +13,7 @@ import {
   USER_FOLLOWING_STATE_CHANGE,
   USERS_DATA_STATE_CHANGE,
   USERS_POSTS_STATE_CHANGE,
+  CLEAR_DATA,
 } from "../constants";
 
 export function fetchUser() {
@@ -27,6 +28,7 @@ export function fetchUser() {
 }
 
 export function fetchUserPosts() {
+  console.log("fetching.................");
   return async (dispatch) => {
     let userPostsRef = collection(
       db,
@@ -100,5 +102,19 @@ export function fetchUsersFollowingPosts(uid) {
       dispatch({ type: USERS_POSTS_STATE_CHANGE, posts, uid });
       console.log(getState());
     });
+  };
+}
+
+export function clearData() {
+  return (dispatch) => {
+    dispatch({ type: CLEAR_DATA });
+  };
+}
+
+export function reload() {
+  return (dispatch) => {
+    dispatch(fetchUser());
+    dispatch(fetchUserPosts());
+    dispatch(fetchUserFollowing());
   };
 }

@@ -1,22 +1,25 @@
 import React, { useState } from "react";
 import { View, TextInput, Image, Button } from "react-native";
 import { storage, auth } from "./../../firebase/config";
-import {
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { addPost } from "../../firebase/services";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import {
+  fetchUser,
+  fetchUserPosts,
+  fetchUserFollowing,
+} from "../../reudx/actions";
 require("firebase/firestore");
 require("firebase/storage");
 
-export default function Save(props) {
+function Save(props) {
   const [caption, setCaption] = useState("");
   const uploadImage = async () => {
     const childPath = `posts/${auth.currentUser.uid}/${Math.random().toString(
       36
     )}`;
+    console.log(props);
     const uri = props.route.params.image;
     const response = await fetch(uri);
     const blob = await response.blob();
@@ -55,6 +58,7 @@ export default function Save(props) {
 
   const savePostData = (downloadURL) => {
     addPost({ downloadURL, caption });
+    props.fetchUserPosts();
     props.navigation.popToTop();
   };
   return (
@@ -68,3 +72,15 @@ export default function Save(props) {
     </View>
   );
 }
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    { fetchUser, fetchUserPosts, fetchUserFollowing },
+    dispatch
+  );
+
+const mapStateToProps = (store) => ({
+  currentUser: store.userState.currentUser,
+  posts: store.userState.posts,
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Save);

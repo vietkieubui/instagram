@@ -8,6 +8,7 @@ import {
   fetchUser,
   fetchUserPosts,
   fetchUserFollowing,
+  clearData,
 } from "../reudx/actions";
 import FeedScreen from "./main/Feed";
 import ProfileScreen from "./main/Profile";
@@ -23,6 +24,7 @@ const EpmtyScreen = () => {
 
 function Main(props) {
   useEffect(() => {
+    props.clearData();
     props.fetchUser();
     props.fetchUserPosts();
     props.fetchUserFollowing();
@@ -74,7 +76,9 @@ function Main(props) {
         listeners={({ navigation }) => ({
           tabPress: (event) => {
             event.preventDefault();
-            navigation.navigate("Profile", { uid: auth.currentUser.uid });
+            navigation.navigate("Profile", {
+              uid: auth.currentUser.uid,
+            });
           },
         })}
         options={{
@@ -93,7 +97,7 @@ function Main(props) {
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
-    { fetchUser, fetchUserPosts, fetchUserFollowing },
+    { fetchUser, fetchUserPosts, fetchUserFollowing, clearData },
     dispatch
   );
 

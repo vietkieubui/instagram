@@ -83,3 +83,7 @@ export const fetchUsersList = (search) => {
   }, [search]);
   return documents;
 };
+
+export const logOut = () => {
+  auth.signOut();
+};
