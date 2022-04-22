@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Button, TextInput } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { addDocument, setDocument } from "../../firebase/services";
 import { auth } from "../../firebase/config";
 
 export default function Register() {

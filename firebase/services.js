@@ -1,5 +1,17 @@
 import firebase, { db, auth } from "./config";
-import { collection, addDoc, setDoc, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  getDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  where,
+  deleteDoc,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 export const addDocument = (collections, data) => {
   const usersCollectionRef = collection(db, collections);
@@ -17,10 +29,31 @@ export const addPost = async (data) => {
     "userPosts",
     Math.random().toString(36)
   );
-  setDoc(postRef, {
+  await setDoc(postRef, {
     ...data,
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
   });
+};
+
+export const addFollowing = async (uid) => {
+  const followingRef = doc(
+    db,
+    "following",
+    auth.currentUser.uid,
+    "userFollowing",
+    uid
+  );
+  await setDoc(followingRef, {});
+};
+export const deleteFollowing = async (uid) => {
+  const followingRef = doc(
+    db,
+    "following",
+    auth.currentUser.uid,
+    "userFollowing",
+    uid
+  );
+  await deleteDoc(followingRef);
 };
 
 export const setDocument = (collections, data, uid) => {
@@ -28,17 +61,25 @@ export const setDocument = (collections, data, uid) => {
     ...data,
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
   });
-  console.log("ghi setDoc doneeee");
 };
 
-export const getDocument = async (collections, uid) => {
-  const docRef = doc(db, collections, uid);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    console.log("getDocument:", docSnap.data());
-    return docSnap.data();
-  } else {
-    console.log("No such document!");
-    return undefined;
-  }
+export const fetchUsersList = (search) => {
+  const [documents, setDocuments] = useState([]);
+  useEffect(async () => {
+    let usersCollectionRef = collection(db, "users");
+    usersCollectionRef = query(
+      usersCollectionRef,
+      orderBy("createdAt", "desc")
+    );
+    usersCollectionRef = query(usersCollectionRef, where("name", "==", search));
+    const unsubcribe = onSnapshot(usersCollectionRef, (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setDocuments(data);
+    });
+    return unsubcribe;
+  }, [search]);
+  return documents;
 };

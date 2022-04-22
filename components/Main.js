@@ -8,6 +8,9 @@ import { fetchUser, fetchUserPosts } from "../reudx/actions";
 import FeedScreen from "./main/Feed";
 import ProfileScreen from "./main/Profile";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon from "react-native-vector-icons/AntDesign";
+import SearchScreen from "./main/Search";
+import { auth } from "../firebase/config";
 
 const Tab = createMaterialBottomTabNavigator();
 const EpmtyScreen = () => {
@@ -16,11 +19,10 @@ const EpmtyScreen = () => {
 
 function Main(props) {
   useEffect(() => {
-    console.log(props);
     props.fetchUser();
     props.fetchUserPosts();
-    console.log(props);
   }, []);
+  console.log(props);
   return (
     <Tab.Navigator initialRouteName="Feed" labeled={false}>
       <Tab.Screen
@@ -29,6 +31,16 @@ function Main(props) {
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+        navigation={props.navigation}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="search1" color={color} size={26} />
           ),
         }}
       />
@@ -54,6 +66,13 @@ function Main(props) {
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
+        navigation={props.navigation}
+        listeners={({ navigation }) => ({
+          tabPress: (event) => {
+            event.preventDefault();
+            navigation.navigate("Profile", { uid: auth.currentUser.uid });
+          },
+        })}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons

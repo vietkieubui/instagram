@@ -62,11 +62,7 @@ export default function App(props) {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen
-            name="Main"
-            component={MainScreen}
-            options={{ headerShown: false }}
-          />
+          <Stack.Screen name="Main" component={MainScreen} />
           <Stack.Screen
             name="Add"
             component={AddScreen}

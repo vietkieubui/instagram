@@ -7,7 +7,6 @@ import {
   query,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
-import { getDocument } from "../../firebase/services";
 import { USER_POSTS_STATE_CHANGE, USER_STATE_CHANGE } from "../constants";
 
 export function fetchUser() {
@@ -27,13 +26,12 @@ export function fetchUserPosts() {
       db,
       `posts/${auth.currentUser.uid}/userPosts`
     );
-    userPostsRef = query(userPostsRef, orderBy("createdAt"));
+    userPostsRef = query(userPostsRef, orderBy("createdAt", "desc"));
     onSnapshot(userPostsRef, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
-      console.log("dataaaaa:", data);
       dispatch({ type: USER_POSTS_STATE_CHANGE, posts: data });
     });
   };
