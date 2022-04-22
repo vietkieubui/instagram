@@ -7,7 +7,11 @@ import {
   query,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
-import { USER_POSTS_STATE_CHANGE, USER_STATE_CHANGE } from "../constants";
+import {
+  USER_POSTS_STATE_CHANGE,
+  USER_STATE_CHANGE,
+  USER_FOLLOWING_STATE_CHANGE,
+} from "../constants";
 
 export function fetchUser() {
   return async (dispatch) => {
@@ -33,6 +37,21 @@ export function fetchUserPosts() {
         id: doc.id,
       }));
       dispatch({ type: USER_POSTS_STATE_CHANGE, posts: data });
+    });
+  };
+}
+export function fetchUserFollowing() {
+  return async (dispatch) => {
+    let userPostsRef = collection(
+      db,
+      `following/${auth.currentUser.uid}/userFollowing`
+    );
+    onSnapshot(userPostsRef, (snapshot) => {
+      const following = snapshot.docs.map((doc) => {
+        const id = doc.id;
+        return id;
+      });
+      dispatch({ type: USER_FOLLOWING_STATE_CHANGE, following });
     });
   };
 }

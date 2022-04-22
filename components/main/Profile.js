@@ -11,7 +11,7 @@ import {
 } from "firebase/firestore";
 import { connect } from "react-redux";
 import { auth, db } from "../../firebase/config";
-import { addFollowing } from "../../firebase/services";
+import { addFollowing, deleteFollowing } from "../../firebase/services";
 
 function Profile(props) {
   // console.log(props);
@@ -21,7 +21,7 @@ function Profile(props) {
 
   useEffect(async () => {
     const { currentUser, posts } = props;
-    // console.log({ currentUser, posts });
+    console.log(props);
     if (props.route.params.uid === auth.currentUser.uid) {
       setUser(currentUser);
       setUserPosts(posts);
@@ -45,12 +45,19 @@ function Profile(props) {
         setUserPosts(data);
       });
     }
-  }, [props.route.params.uid]);
+    if (props.following.indexOf(props.route.params.uid) > -1) {
+      setFollowing(true);
+    } else {
+      setFollowing(false);
+    }
+  }, [props.route.params.uid, props.following]);
 
   const onFollow = () => {
     addFollowing(props.route.params.uid);
   };
-  const onUnfollow = () => {};
+  const onUnfollow = () => {
+    deleteFollowing(props.route.params.uid);
+  };
   if (user === null) {
     return <View></View>;
   }
@@ -108,6 +115,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
   posts: store.userState.posts,
+  following: store.userState.following,
 });
 
 export default connect(mapStateToProps, null)(Profile);
