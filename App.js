@@ -11,6 +11,7 @@ import LoginScreen from "./components/auth/Login";
 import MainScreen from "./components/Main";
 import AddScreen from "./components/main/Add";
 import SaveScreen from "./components/main/Save";
+import CommnetScreen from "./components/main/Comment";
 
 import { auth } from "./firebase/config";
 
@@ -69,6 +70,7 @@ export default function App(props) {
             navigation={props.navigation}
           />
           <Stack.Screen name="Save" component={SaveScreen} />
+          <Stack.Screen name="Comment" component={CommnetScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

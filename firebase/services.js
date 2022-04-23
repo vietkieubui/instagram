@@ -87,3 +87,20 @@ export const fetchUsersList = (search) => {
 export const logOut = () => {
   auth.signOut();
 };
+
+export const getComments = (uid, postId) => {
+  const [comments, setComments] = useState([]);
+  const commentsCollectionRef = collection(
+    db,
+    `posts/${uid}/userPosts/${postId}/comments`
+  );
+  onSnapshot(commentsCollectionRef, (snapshot) => {
+    const data = snapshot.docs.map((doc) => {
+      // const text = doc.data();
+      const id = doc.id;
+      return { id, ...doc.data() };
+    });
+    setComments(data);
+  });
+  return comments;
+};
