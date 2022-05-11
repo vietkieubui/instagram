@@ -29,7 +29,7 @@ import { auth, db } from "../../firebase/config";
 import { addFollowing, deleteFollowing, logOut } from "../../firebase/services";
 
 function Profile(props) {
-  // console.log(props);
+  console.log(props);
   const [userPosts, setUserPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [following, setFollowing] = useState(false);
